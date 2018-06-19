@@ -1,11 +1,9 @@
 # Packages Used
 # pryr - R Internals
 # data.table- Reading Big Data
-# tidyverse - Tidy Data
-# knitr - cacahing 
 # tictoc - Time the Execustion -
 
-pkgs <- c("pryr", "data.table",  "tidyverse", "knitr" ,"tictoc", "psych")
+pkgs <- c("pryr", "data.table",  "tidyverse","tictoc", "psych")
 
 # Install Packages
 for (pkg in pkgs) {
@@ -14,9 +12,6 @@ for (pkg in pkgs) {
 
 # Load Packages
 lapply(pkgs, library, character.only = TRUE)
-
-# Turn on the cache for increased performance.
-opts_chunk$set(tidy=TRUE, tidy.opts=list(blank=FALSE, width.cutoff=80), cache=TRUE)
 
 # Set Working Directory For Data
 setwd("~/Workspace/prototypes/data-science/data")
