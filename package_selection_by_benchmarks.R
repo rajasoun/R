@@ -39,6 +39,7 @@ data.table.dataset <- fread(challenge_data,
 toc()
 dim(data.table.dataset)
 
+
 tic()
 csv2_data <- read.csv2(challenge_data,
                        sep = "\t",
@@ -71,3 +72,7 @@ ff_csv_data <- read.table.ffdf(file = challenge_data,
                              )
 toc()
 dim(ff_csv_data)
+
+
+## Package Selection Decisioon Record ###
+# data.table Selected for Reading Very Big CSV/TSV Files based on Above Benchmarks - 20th Jun2 108 - Raja
