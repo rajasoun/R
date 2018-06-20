@@ -1,9 +1,11 @@
 # Packages Used
 # pryr - R Internals
 # data.table- Reading Big Data
+# tidyverse - Tidy Data
+# 
 # tictoc - Time the Execustion -
 
-pkgs <- c("pryr", "data.table",  "tidyverse","tictoc", "psych")
+pkgs <- c("pryr", "data.table",  "tidyverse","tictoc")
 
 # Install Packages
 for (pkg in pkgs) {
@@ -23,32 +25,74 @@ data_file <- "training_set.tsv"
 # and how to treat strings.
 
 tic("Using data.table Fread")
-data.table.dataset <- fread(data_file, sep="\t", header=TRUE, stringsAsFactors = TRUE)
-data.table.dataset_time <- toc()
+data.table.dataset <- fread(challenge_data, sep="\t", header=TRUE, stringsAsFactors = TRUE)
 dim(data.table.dataset)
+toc()
+
+# Cleaning up rows & columns without NA
+tic("Cleaning up rows & columns without NA")
+data.table.dataset <- na.omit(data.table.dataset)
+dim(data.table.dataset)
+toc()
+
+# Remove Duplicates if any
+tic("Remove Duplicates if any")
+data.table.dataset = distinct(data.table.dataset)
+dim(data.table.dataset)
+toc()
+
 
 mem_used()
 object_size(data.table.dataset)
 
-# rows & columsn without NA
-data.table.dataset <- na.omit(data.table.dataset)
-dim(dataset)
-
-# Remove Duplicates if any
-distinct_data = distinct(dataset)
-dim(distinct_data)
-
 # Tidy the Data [Meaningfull Column Names]
-names(distinct_data) %<>%
+names(data.table.dataset) %<>%
   toupper() %>%
-  str_replace_all("IBSA_MAIN_TRAINING_SET.", "")
+  str_replace_all("IBSA_MAIN_SMALL_TRAINING_SET.", "")
 
 # Understand The Data
-colnames(distinct_data) # Names of teh Columns
-glimpse(distinct_data)
+colnames(data.table.dataset) # Names of teh Columns
+glimpse(data.table.dataset)
+
+# Extract Columns Names based on Name Patterns
+column.names <- names(data.table.dataset)
+column.names
+# Column Names Containing ID
+column_with_id <- column.names[grep("ID",column.names,fixed=TRUE)]
+column_with_id
+
+
+# Getting Unique Values for a Column in a DataFrame
+unique(data.table.dataset$RENEWED_YORN)
+# Counting unique / distinct values by Columns of a Data Frame group in a data frame
+data.table.dataset[, 
+                   .(total = uniqueN(INNOVATION_CHALLENGE_KEY)), 
+                   by = RENEWED_YORN
+                  ]
+
+# Just First Column with All rows
+unique(data.table.dataset[, 2])
+
+# Counting unique / distinct values in a data frame by Columns
+n=20
+factors_with_n_values = 0
+
+for (i in 1:ncol(data.table.dataset)){
+    unique_col_values <- unique(data.table.dataset[, i, with=FALSE])
+    number_of_rows_in_column <- nrow((unique_col_values))
+    if (number_of_rows_in_column < n) { 
+      print(unique_col_values)
+      factors_with_n_values <- factors_with_n_values + 1
+    }
+}
+print(factors_with_n_values)
+
+# Finding Correlations between Two Numeric Columns
+with(data.table.dataset, cor(PRODUCT_NET_PRICE, CONTRACT_LINE_NET_USD_AMOUNT))
+
 
 # Understand The Data that is Numeric & Explore Options to Apply Filter
-numeric_data <- select_if(distinct_data, is.numeric)
+numeric_data <- select_if(data.table.dataset, is.numeric)
 colnames(numeric_data) # Names of the Columns
 glimpse(numeric_data)
 dim(numeric_data)
