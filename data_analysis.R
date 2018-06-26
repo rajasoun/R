@@ -1,5 +1,5 @@
 # Packages Used
-pkgs <- c("party","Boruta","tidyverse")
+pkgs <- c("party","data.table", "Boruta","tidyverse")
 
 # Install Packages
 for (pkg in pkgs) {
@@ -9,14 +9,19 @@ for (pkg in pkgs) {
 # Load Packages
 lapply(pkgs, library, character.only = TRUE)
 
-# Set Working Directory For Data
-setwd("~/Workspace/prototypes/data-science/data")
+# Datasets from Flat File
+flight_data <- "dot_online_flight_data.csv"
+path <- file.path("~/workspace/data-science","datasets", challenge_data) #Path To Data File
 
 # Load Data Load the data into a data frame with columns and rows
 # We specify the file path, separator, whether the CSV/tsv file's 1st row is clumn names,
 # and how to treat strings.
-original_data <- read.csv2("dot_ontime_flight_data.csv", sep=",", header=TRUE, stringsAsFactors = TRUE)
-#original_data <- read.table(file = 'sampleData.tsv', sep = '\t', header = TRUE, stringsAsFactors = TRUE)
+dataset <- fread(path,
+                 sep = ",", #column seperator
+                 header = TRUE, #first row is variable/column names - Default is False
+                 showProgress = TRUE, 
+                 stringsAsFactors = TRUE
+)
 
 # rows & columns
 dim(original_data)
