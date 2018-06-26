@@ -15,17 +15,22 @@ for (pkg in pkgs) {
 # Load Packages
 lapply(pkgs, library, character.only = TRUE)
 
-# Set Working Directory For Data
-setwd("~/Workspace/prototypes/data-science/data")
+
+# Datasets from Flat File
+sample_data <- "sampleData.tsv"
 challenge_data <- "challengeData.tsv"
-data_file <- "training_set.tsv"
+training_data <- "training_set.tsv"
+scoring_data <- "scoring_set.tsv"
+
+path <- file.path("~/workspace/data-science","datasets", challenge_data) #Path To Data File
+
 
 # Load Data Load the data into a data frame with columns and rows
 # We specify the file path, separator, whether the CSV/tsv file's 1st row is clumn names,
 # and how to treat strings.
 
 tic("Using data.table Fread")
-data.table.dataset <- fread(challenge_data, sep="\t", header=TRUE, stringsAsFactors = TRUE)
+data.table.dataset <- fread(path, sep="\t", header=TRUE, stringsAsFactors = TRUE)
 dim(data.table.dataset)
 toc()
 

@@ -6,10 +6,10 @@
 # tidyverse - Tidy Data
 # tictoc - Time the Execustion -
 
+# OS Dependencies for tidyverse
+# sudo apt-get install libcurl4-openssl-dev libxml2-dev
 
 pkgs <- c("pryr", "data.table", "tidyverse","tictoc")
-
-# Packages Used
 # pkgs <- c("party","Boruta","data.table", "knitr" ,"tictoc", "tidyverse","dplyr")
 
 # Install Packages
@@ -20,23 +20,25 @@ for (pkg in pkgs) {
 # Load Packages
 lapply(pkgs, library, character.only = TRUE)
 
-# Set Working Directory For Data
-getwd()
-setwd("~/Workspace/prototypes/data-science/data")
-# setwd("~/workspace/data-science/data")
+
+# Datasets from Flat File
+sample_data <- "sampleData.tsv"
 challenge_data <- "challengeData.tsv"
-data_file <- "training_set.tsv"
+training_data <- "training_set.tsv"
+scoring_data <- "scoring_set.tsv"
+
+path <- file.path("~/workspace/data-science","datasets", challenge_data) #Path To Data File
 
 # Load Data Load the data into a data frame with columns and rows
 # We specify the file path, separator, whether the CSV/tsv file's 1st row is clumn names,
 # and how to treat strings.
 
 tic("Using data.table Fread")
-dataset <- fread(challenge_data,
-                            sep = "\t",
-                            header = TRUE,
-                            showProgress = TRUE,
-                            stringsAsFactors = TRUE
+dataset <- fread(path,
+                      sep = "\t", #column seperator
+                      header = TRUE, #first row is variable/column names - Default is False
+                      showProgress = TRUE, 
+                      stringsAsFactors = TRUE
 )
 toc()
 dim(dataset)
@@ -62,7 +64,7 @@ column_number
 
 
 # Column Names Containing DATE
-column_with_id <- column_names[grep("DATE",column.names,fixed=TRUE)]
+column_with_id <- column_names[grep("DATE",column_names,fixed=TRUE)]
 column_with_id
 
 # Get first 2 rows of the Data Frame
