@@ -1,5 +1,8 @@
 #!/usr/bin/env Rscript
 
+# Clean Up Environment 
+rm(list=ls())
+
 # Packages Used
 # pryr - R Internals
 # data.table - Reading Big Data
@@ -27,7 +30,9 @@ challenge_data <- "challengeData.tsv"
 training_data <- "training_set.tsv"
 scoring_data <- "scoring_set.tsv"
 
-path <- file.path("~/workspace/data-science","datasets", challenge_data) #Path To Data File
+path <- file.path("~/workspace/data-science",
+                  "datasets", 
+                  challenge_data) #Path To Data File
 
 # Load Data Load the data into a data frame with columns and rows
 # We specify the file path, separator, whether the CSV/tsv file's 1st row is clumn names,
@@ -38,7 +43,8 @@ dataset <- fread(path,
                       sep = "\t", #column seperator
                       header = TRUE, #first row is variable/column names - Default is False
                       showProgress = TRUE, 
-                      stringsAsFactors = TRUE
+                      stringsAsFactors = TRUE,
+                      fill = TRUE #Fill with blank fields for rows with unequal length
 )
 toc()
 dim(dataset)
