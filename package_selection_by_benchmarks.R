@@ -1,6 +1,6 @@
 # Packages Used
 # pryr - R Internals
-# data.table, bigmemory, sqldf, ff - Reading Big Data
+# data.table, sqldf, ff - Reading Big Data
 # tidyverse - Tidy Data
 # tictoc - Time the Execustion -
 
@@ -18,20 +18,26 @@ for (pkg in pkgs) {
 # Load Packages
 lapply(pkgs, library, character.only = TRUE)
 
-# Set Working Directory For Data
-# setwd("~/Workspace/prototypes/data-science/data")
-getwd()
-setwd("~/workspace/data-science/data")
-challenge_data <- "sampleData.tsv"
-data_file <- "training_set.tsv"
+# Datasets from Flat File
+sample_data <- "sampleData.tsv"
+challenge_data <- "challengeData.tsv"
+training_data <- "training_set.tsv"
+scoring_data <- "scoring_set.tsv"
+flight_data <- "dot_ontime_flight_data.csv"
+
+path <- file.path("~/workspace/data-science",
+                  "datasets", 
+                  flight_data) #Path To Data File
+
+
 
 # Load Data Load the data into a data frame with columns and rows
 # We specify the file path, separator, whether the CSV/tsv file's 1st row is clumn names,
 # and how to treat strings.
 
 tic("Using data.table Fread")
-data.table.dataset <- fread(challenge_data,
-                            sep = "\t",
+data.table.dataset <- fread(path,
+                            sep = ",",
                             header = TRUE,
                             showProgress = TRUE,
                             stringsAsFactors = TRUE
@@ -41,8 +47,8 @@ dim(data.table.dataset)
 
 
 tic()
-csv2_data <- read.csv2(challenge_data,
-                       sep = "\t",
+csv2_data <- read.csv2(path,
+                       sep = ",",
                        header = TRUE
                        )
 toc()
@@ -50,25 +56,18 @@ dim(csv2_data)
 
 
 tic()
-big_memory <- read.big.matrix(challenge_data,
-                              sep = "\t",
-                              header = TRUE
-                              )
-toc()
-dim(big_memory)
-
-tic()
-sqldf_csv_data <- read.csv.sql(challenge_data,
-                               sep = "\t")
+sqldf_csv_data <- read.csv.sql(path,
+                               sep = ",")
 toc()
 dim(sqldf_csv_data)
 
 
 tic()
-ff_csv_data <- read.table.ffdf(file = challenge_data,
-                             sep = "\t",
+ff_csv_data <- read.table.ffdf(file = path,
+                             sep = ",",
                              header = TRUE,
-                             fill = TRUE
+                             fill = TRUE,
+                             quote = ""
                              )
 toc()
 dim(ff_csv_data)
