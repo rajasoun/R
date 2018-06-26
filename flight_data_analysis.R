@@ -10,8 +10,8 @@ for (pkg in pkgs) {
 lapply(pkgs, library, character.only = TRUE)
 
 # Datasets from Flat File
-flight_data <- "dot_online_flight_data.csv"
-path <- file.path("~/workspace/data-science","datasets", challenge_data) #Path To Data File
+flight_data <- "dot_ontime_flight_data.csv"
+path <- file.path("~/workspace/data-science","datasets", flight_data) #Path To Data File
 
 # Load Data Load the data into a data frame with columns and rows
 # We specify the file path, separator, whether the CSV/tsv file's 1st row is clumn names,
@@ -20,23 +20,24 @@ dataset <- fread(path,
                  sep = ",", #column seperator
                  header = TRUE, #first row is variable/column names - Default is False
                  showProgress = TRUE, 
-                 stringsAsFactors = TRUE
+                 stringsAsFactors = TRUE,
+                 fill = TRUE
 )
 
 # rows & columns
-dim(original_data)
-
-# rows & columsn without NA
-dataset <- na.omit(original_data)
 dim(dataset)
 
+# rows & columsn without NA
+# dataset <- na.omit(dataset)
+# dim(dataset)
+
 # Understand The Data
-colnames(original_data) # Names of teh Columns
+colnames(dataset) # Names of teh Columns
 
 # That is a lot of rows to process so to speed thing up 
 # let's restrict data to only flight between certain large airports
 airports <-c('ATL','LAX', 'ORD', 'DFW', 'JFK', 'SFO', 'CLT', 'LAS', 'PHX')
-flights_btw_large_airports  <- subset(original_data, DEST %in% airports & ORIGIN %in% airports)
+flights_btw_large_airports  <- subset(dataset, DEST %in% airports & ORIGIN %in% airports)
 nrow(flights_btw_large_airports)
 
 summary(flights_btw_large_airports)
@@ -53,4 +54,4 @@ names(flights_btw_large_airports) %<>%
 glimpse(flights_btw_large_airports)
 
 summarise(flights_btw_large_airports, correlation = cor(ORIGIN.AIRPORT.SEQ.ID, ORIGIN.AIRPORT.ID))
-cor(flights_btw_large_airports[c("ORIGIN.AIRPORT.SEQ.ID", "ORIGIN.AIRPORT.ID")])
+
